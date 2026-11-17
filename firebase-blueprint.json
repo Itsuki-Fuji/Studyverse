@@ -1,0 +1,272 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Student profile, academic preferences, and streak stats",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "course": { "type": "string" },
+        "academicYear": { "type": "string" },
+        "institution": { "type": "string" },
+        "dailyStudyTargetMinutes": { "type": "integer" },
+        "preferredStudySlot": { "type": "string", "enum": ["MORNING", "AFTERNOON", "EVENING", "NIGHT"] },
+        "notificationsEnabled": { "type": "boolean" },
+        "darkModePref": { "type": "string", "enum": ["SYSTEM", "LIGHT", "DARK"] },
+        "currentStreak": { "type": "integer" },
+        "longestStreak": { "type": "integer" },
+        "lastStudyDate": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp" }
+      },
+      "required": ["userId", "displayName", "dailyStudyTargetMinutes", "preferredStudySlot", "notificationsEnabled", "darkModePref", "currentStreak", "longestStreak", "createdAt", "updatedAt"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "Academic subject with color, priority, difficulty, and study targets",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "colorHex": { "type": "string" },
+        "iconName": { "type": "string" },
+        "priority": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"] },
+        "difficulty": { "type": "string", "enum": ["HARD", "MEDIUM", "EASY"] },
+        "targetHoursPerWeek": { "type": "number" },
+        "notes": { "type": "string" },
+        "examDateMillis": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "colorHex", "iconName", "priority", "difficulty", "targetHoursPerWeek", "createdAt", "updatedAt"]
+    },
+    "Chapter": {
+      "title": "Chapter",
+      "description": "Syllabus chapter/unit linked to a subject with completion, spaced repetition, and backlog state",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "title": { "type": "string" },
+        "topics": { "type": "array" },
+        "status": { "type": "string", "enum": ["NOT_STARTED", "IN_PROGRESS", "COMPLETED"] },
+        "revisionCount": { "type": "integer" },
+        "lastRevisedMillis": { "type": "integer" },
+        "nextRevisionMillis": { "type": "integer" },
+        "estimatedMinutes": { "type": "integer" },
+        "backlogPriority": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"] },
+        "inBacklog": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "subjectId", "title", "topics", "status", "revisionCount", "estimatedMinutes", "backlogPriority", "inBacklog", "createdAt", "updatedAt"]
+    },
+    "StudySession": {
+      "title": "StudySession",
+      "description": "Scheduled or completed Pomodoro/study session",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "subjectName": { "type": "string" },
+        "title": { "type": "string" },
+        "dateKey": { "type": "string" },
+        "startHour": { "type": "integer" },
+        "startMinute": { "type": "integer" },
+        "durationMinutes": { "type": "integer" },
+        "sessionType": { "type": "string", "enum": ["STUDY", "REVISION", "POMODORO", "PRACTICE"] },
+        "completed": { "type": "boolean" },
+        "aiGenerated": { "type": "boolean" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "subjectId", "subjectName", "title", "dateKey", "startHour", "startMinute", "durationMinutes", "sessionType", "completed", "aiGenerated", "createdAt", "updatedAt"]
+    },
+    "DeadlineItem": {
+      "title": "DeadlineItem",
+      "description": "Assignment, project, homework, practical, exam, or academic task deadline",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "subjectName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string", "enum": ["ASSIGNMENT", "PROJECT", "HOMEWORK", "PRACTICAL", "INTERNAL_EXAM", "EXTERNAL_EXAM", "PERSONAL"] },
+        "dueAtMillis": { "type": "integer" },
+        "priority": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"] },
+        "reminderDaysBefore": { "type": "integer" },
+        "completed": { "type": "boolean" },
+        "completedAtMillis": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "subjectId", "subjectName", "title", "category", "dueAtMillis", "priority", "reminderDaysBefore", "completed", "createdAt", "updatedAt"]
+    },
+    "StudyNote": {
+      "title": "StudyNote",
+      "description": "Digital notebook entry with AI summary, pinning, bookmarking, and attachments",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "subjectName": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "aiSummary": { "type": "string" },
+        "tags": { "type": "array" },
+        "pinned": { "type": "boolean" },
+        "bookmarked": { "type": "boolean" },
+        "attachmentName": { "type": "string" },
+        "attachmentUri": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "subjectId", "subjectName", "title", "content", "tags", "pinned", "bookmarked", "createdAt", "updatedAt"]
+    },
+    "StudyHabit": {
+      "title": "StudyHabit",
+      "description": "Daily academic habit with completion date keys and streak",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "targetMinutes": { "type": "integer" },
+        "category": { "type": "string" },
+        "streak": { "type": "integer" },
+        "completedDates": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "targetMinutes", "category", "streak", "completedDates", "createdAt", "updatedAt"]
+    },
+    "FlashcardDeck": {
+      "title": "FlashcardDeck",
+      "description": "AI-generated or manual flashcard deck",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "title": { "type": "string" },
+        "cards": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "subjectId", "title", "cards", "createdAt", "updatedAt"]
+    },
+    "AiChatMessage": {
+      "title": "AiChatMessage",
+      "description": "Persisted AI study assistant conversation message",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "role": { "type": "string", "enum": ["USER", "MODEL"] },
+        "text": { "type": "string" },
+        "mode": { "type": "string" },
+        "subjectName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "role", "text", "mode", "createdAt"]
+    },
+    "StudyGroup": {
+      "title": "StudyGroup",
+      "description": "Collaborative study group shared across participating students",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "subjectTag": { "type": "string" },
+        "description": { "type": "string" },
+        "inviteCode": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "dailyGoalMinutes": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "subjectTag", "inviteCode", "ownerId", "memberUids", "dailyGoalMinutes", "createdAt", "updatedAt"]
+    },
+    "GroupInvite": {
+      "title": "GroupInvite",
+      "description": "Lookup index mapping invite code to study group ID",
+      "type": "object",
+      "properties": {
+        "groupId": { "type": "string" },
+        "groupName": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["groupId", "groupName", "ownerId", "createdAt"]
+    },
+    "GroupMessage": {
+      "title": "GroupMessage",
+      "description": "Discussion message or shared note inside a study group",
+      "type": "object",
+      "properties": {
+        "groupId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "text": { "type": "string" },
+        "resourceTitle": { "type": "string" },
+        "resourceSummary": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["groupId", "senderId", "senderName", "text", "memberUids", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private student profile and preferences"
+    },
+    "/users/{userId}/subjects/{subjectId}": {
+      "schema": { "$ref": "#/entities/Subject" },
+      "description": "Student enrolled subjects"
+    },
+    "/users/{userId}/chapters/{chapterId}": {
+      "schema": { "$ref": "#/entities/Chapter" },
+      "description": "Subject syllabus chapters and backlog items"
+    },
+    "/users/{userId}/study_sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/StudySession" },
+      "description": "Scheduled and completed study/pomodoro sessions"
+    },
+    "/users/{userId}/deadlines/{deadlineId}": {
+      "schema": { "$ref": "#/entities/DeadlineItem" },
+      "description": "Deadlines, assignments, and exams"
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": { "$ref": "#/entities/StudyNote" },
+      "description": "Digital notebook entries"
+    },
+    "/users/{userId}/habits/{habitId}": {
+      "schema": { "$ref": "#/entities/StudyHabit" },
+      "description": "Daily study habits"
+    },
+    "/users/{userId}/flashcard_decks/{deckId}": {
+      "schema": { "$ref": "#/entities/FlashcardDeck" },
+      "description": "Flashcard decks"
+    },
+    "/users/{userId}/ai_messages/{messageId}": {
+      "schema": { "$ref": "#/entities/AiChatMessage" },
+      "description": "AI Study Assistant message history"
+    },
+    "/study_groups/{groupId}": {
+      "schema": { "$ref": "#/entities/StudyGroup" },
+      "description": "Collaborative study groups"
+    },
+    "/group_invites/{inviteCode}": {
+      "schema": { "$ref": "#/entities/GroupInvite" },
+      "description": "Invite code to group ID lookup"
+    },
+    "/study_groups/{groupId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/GroupMessage" },
+      "description": "Study group messages and shared notes"
+    }
+  }
+}
